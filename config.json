@@ -32,7 +32,7 @@
   },
   "ai": {
     "geminiApiKey": "AIzaSyCIeUZRjvpi9Je8cTJ0s8_STImVWjRSzmA",
-    "model": "gemini-1.5-flash",
+    "model": "gemini-3-flash",
     "enabled": true
   },
   "admin": {
