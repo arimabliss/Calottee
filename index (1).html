@@ -1,0 +1,823 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Calotté — Premium gym equipment and supplements. Shop barbells, dumbbells, treadmills, protein, and more." />
+  <title>Calotté — Premium Gym Equipment & Supplements</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500;600;700&family=Outfit:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js" defer></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js" defer></script>
+</head>
+<body>
+
+<!-- ========== LOADER ========== -->
+<div id="loader" class="loader">
+  <div class="loader-inner">
+    <div class="loader-logo-wrap">
+      <div class="loader-logo-icon">
+        <svg viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <circle cx="40" cy="40" r="36" stroke="url(#lg1)" stroke-width="2"/>
+          <path d="M20 40 Q40 18 60 40" stroke="url(#lg2)" stroke-width="3" stroke-linecap="round" fill="none"/>
+          <path d="M20 40 Q40 62 60 40" stroke="url(#lg2)" stroke-width="1.5" stroke-linecap="round" fill="none" opacity="0.4"/>
+          <circle cx="40" cy="40" r="5" fill="url(#lg1)"/>
+          <defs>
+            <linearGradient id="lg1" x1="0" y1="0" x2="80" y2="80" gradientUnits="userSpaceOnUse">
+              <stop stop-color="#C8F000"/>
+              <stop offset="1" stop-color="#7FBF00"/>
+            </linearGradient>
+            <linearGradient id="lg2" x1="0" y1="0" x2="80" y2="40" gradientUnits="userSpaceOnUse">
+              <stop stop-color="#C8F000"/>
+              <stop offset="1" stop-color="#FFFFFF"/>
+            </linearGradient>
+          </defs>
+        </svg>
+      </div>
+      <span class="loader-brand">Calotté</span>
+    </div>
+    <div class="loader-bar"><div class="loader-fill"></div></div>
+    <p class="loader-tagline">ELEVATE YOUR PERFORMANCE</p>
+  </div>
+</div>
+
+<!-- ========== CART DRAWER ========== -->
+<div id="cartOverlay" class="cart-overlay"></div>
+<aside id="cartDrawer" class="cart-drawer">
+  <div class="cart-header">
+    <h3>Your Cart (<span id="cartCountDrawer">0</span>)</h3>
+    <button id="closeCart" class="cart-close" aria-label="Close cart">✕</button>
+  </div>
+  <div id="cartItems" class="cart-items">
+    <div class="cart-empty">
+      <div class="cart-empty-icon">🛒</div>
+      <p>Your cart is empty</p>
+      <span>Add some elite gear!</span>
+    </div>
+  </div>
+  <div class="cart-footer" id="cartFooter" style="display:none">
+    <div class="cart-subtotal">
+      <span>Subtotal</span>
+      <span id="cartTotal">₹0</span>
+    </div>
+    <button class="btn-primary btn-full" onclick="openCheckout()">Proceed to Checkout</button>
+    <button class="btn-outline btn-full" id="clearCartBtn">Clear Cart</button>
+  </div>
+</aside>
+
+<!-- ========== QUICK VIEW MODAL ========== -->
+<div id="modalOverlay" class="modal-overlay"></div>
+<div id="quickViewModal" class="quick-view-modal">
+  <button id="closeModal" class="modal-close" aria-label="Close modal">✕</button>
+  <div class="modal-inner">
+    <div class="modal-image">
+      <div id="modalProductImg" class="product-img-placeholder"></div>
+      <div class="modal-badges" id="modalBadges"></div>
+    </div>
+    <div class="modal-details">
+      <span id="modalCategory" class="modal-cat"></span>
+      <h2 id="modalTitle"></h2>
+      <div class="modal-rating" id="modalRating"></div>
+      <div class="modal-price-row">
+        <span id="modalPrice" class="modal-price"></span>
+        <span id="modalOrigPrice" class="modal-orig-price"></span>
+        <span id="modalDiscount" class="modal-discount-badge"></span>
+      </div>
+      <p id="modalDesc" class="modal-desc"></p>
+      <div class="modal-qty">
+        <button class="qty-btn" id="qtyMinus">−</button>
+        <span id="qtyValue">1</span>
+        <button class="qty-btn" id="qtyPlus">+</button>
+      </div>
+      <div class="modal-actions">
+        <button id="modalAddCart" class="btn-primary btn-full">Add to Cart</button>
+        <button id="modalWishlist" class="btn-icon-lg" aria-label="Wishlist">♡</button>
+      </div>
+      <div class="modal-specs" id="modalSpecs"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ========== CHECKOUT MODAL ========== -->
+<div id="checkoutOverlay" class="modal-overlay"></div>
+<div id="checkoutModal" class="checkout-modal">
+  <button class="modal-close" onclick="closeCheckout()">✕</button>
+  <div class="checkout-inner">
+    <div class="checkout-header">
+      <div class="checkout-logo">
+        <svg viewBox="0 0 40 40" fill="none" width="32" height="32">
+          <circle cx="20" cy="20" r="18" stroke="url(#clg)" stroke-width="1.5"/>
+          <path d="M10 20 Q20 9 30 20" stroke="url(#clg)" stroke-width="2.5" stroke-linecap="round" fill="none"/>
+          <circle cx="20" cy="20" r="3" fill="url(#clg)"/>
+          <defs><linearGradient id="clg" x1="0" y1="0" x2="40" y2="40" gradientUnits="userSpaceOnUse"><stop stop-color="#C8F000"/><stop offset="1" stop-color="#7FBF00"/></linearGradient></defs>
+        </svg>
+        Calotté Checkout
+      </div>
+      <div class="checkout-steps">
+        <span class="step active" id="step1-indicator">1. Details</span>
+        <span class="step-divider">›</span>
+        <span class="step" id="step2-indicator">2. Payment</span>
+        <span class="step-divider">›</span>
+        <span class="step" id="step3-indicator">3. Confirm</span>
+      </div>
+    </div>
+
+    <!-- Step 1: Customer Details -->
+    <div id="checkoutStep1" class="checkout-step active">
+      <h3>Shipping Details</h3>
+      <div class="form-grid">
+        <div class="form-group">
+          <label>Full Name *</label>
+          <input type="text" id="co-name" placeholder="Your full name" />
+        </div>
+        <div class="form-group">
+          <label>Email *</label>
+          <input type="email" id="co-email" placeholder="email@example.com" />
+        </div>
+        <div class="form-group">
+          <label>Phone *</label>
+          <input type="tel" id="co-phone" placeholder="+91 98765 43210" />
+        </div>
+        <div class="form-group">
+          <label>Pincode *</label>
+          <input type="text" id="co-pincode" placeholder="110001" maxlength="6" />
+        </div>
+        <div class="form-group form-full">
+          <label>Address Line 1 *</label>
+          <input type="text" id="co-addr1" placeholder="House no, Street, Area" />
+        </div>
+        <div class="form-group form-full">
+          <label>Address Line 2</label>
+          <input type="text" id="co-addr2" placeholder="Landmark, Colony (optional)" />
+        </div>
+        <div class="form-group">
+          <label>City *</label>
+          <input type="text" id="co-city" placeholder="New Delhi" />
+        </div>
+        <div class="form-group">
+          <label>State *</label>
+          <select id="co-state">
+            <option value="">Select State</option>
+            <option>Andhra Pradesh</option><option>Assam</option><option>Bihar</option>
+            <option>Delhi</option><option>Gujarat</option><option>Haryana</option>
+            <option>Himachal Pradesh</option><option>Karnataka</option><option>Kerala</option>
+            <option>Madhya Pradesh</option><option>Maharashtra</option><option>Odisha</option>
+            <option>Punjab</option><option>Rajasthan</option><option>Tamil Nadu</option>
+            <option>Telangana</option><option>Uttar Pradesh</option><option>West Bengal</option>
+          </select>
+        </div>
+      </div>
+      <div class="checkout-order-summary" id="checkoutSummary"></div>
+      <button class="btn-primary btn-full" onclick="goToPayment()">Continue to Payment →</button>
+    </div>
+
+    <!-- Step 2: Payment -->
+    <div id="checkoutStep2" class="checkout-step">
+      <h3>Choose Payment Method</h3>
+      <div class="payment-methods">
+        <div class="payment-option" onclick="selectPayment('cashfree')" id="pay-cashfree">
+          <div class="pay-icon">💳</div>
+          <div class="pay-info">
+            <strong>UPI / Cards / Net Banking</strong>
+            <small>Powered by Cashfree — Most secure</small>
+          </div>
+          <div class="pay-check"></div>
+        </div>
+        <div class="payment-option" onclick="selectPayment('crypto')" id="pay-crypto">
+          <div class="pay-icon">₿</div>
+          <div class="pay-info">
+            <strong>Cryptocurrency</strong>
+            <small>BTC, ETH, USDT — 5% discount applied</small>
+          </div>
+          <div class="pay-check"></div>
+        </div>
+      </div>
+
+      <!-- Cashfree Details -->
+      <div id="cashfreePanel" class="pay-panel" style="display:none">
+        <div class="pay-panel-inner">
+          <div class="pay-logos">
+            <span class="pay-badge">UPI</span>
+            <span class="pay-badge">Visa</span>
+            <span class="pay-badge">Mastercard</span>
+            <span class="pay-badge">NetBanking</span>
+          </div>
+          <p class="pay-info-text">You will be securely redirected to Cashfree payment gateway to complete your order. Bank-level encryption guaranteed.</p>
+          <div class="pay-total-display">
+            Order Total: <strong id="cfTotal">₹0</strong>
+          </div>
+        </div>
+      </div>
+
+      <!-- Crypto Details -->
+      <div id="cryptoPanel" class="pay-panel" style="display:none">
+        <div class="pay-panel-inner">
+          <div class="crypto-tabs">
+            <button class="crypto-tab active" onclick="selectCrypto('btc', this)">BTC</button>
+            <button class="crypto-tab" onclick="selectCrypto('eth', this)">ETH</button>
+            <button class="crypto-tab" onclick="selectCrypto('usdt', this)">USDT (TRC20)</button>
+          </div>
+          <div class="crypto-address-box">
+            <div class="qr-placeholder" id="cryptoQR">
+              <div class="qr-mock">
+                <div class="qr-inner">BTC QR</div>
+              </div>
+            </div>
+            <div class="crypto-addr-info">
+              <label>Send exact amount to:</label>
+              <div class="crypto-amount" id="cryptoAmount">0.00 BTC</div>
+              <div class="address-box">
+                <span id="cryptoAddress">bc1qxy2kgdygjrsqtzq2n0yrf2493p83kkfjhx0wlh</span>
+                <button onclick="copyAddress()" class="copy-btn">Copy</button>
+              </div>
+              <div class="crypto-inr">≈ <span id="cryptoINR">₹0</span> (5% crypto discount applied)</div>
+              <p class="crypto-note">⚠️ Send only the exact amount. Order confirmed after 1 blockchain confirmation.</p>
+            </div>
+          </div>
+          <button class="btn-primary btn-full" onclick="confirmCryptoPayment()">I've Sent the Payment →</button>
+        </div>
+      </div>
+
+      <div class="checkout-nav">
+        <button class="btn-outline" onclick="goToStep(1)">← Back</button>
+        <button class="btn-primary" id="payNowBtn" onclick="processPayment()" style="display:none">Pay Now →</button>
+      </div>
+    </div>
+
+    <!-- Step 3: Confirmation -->
+    <div id="checkoutStep3" class="checkout-step">
+      <div class="order-confirmed">
+        <div class="confirm-icon">
+          <svg viewBox="0 0 80 80" fill="none" width="80" height="80">
+            <circle cx="40" cy="40" r="36" fill="url(#cg1)" opacity="0.15"/>
+            <circle cx="40" cy="40" r="36" stroke="url(#cg1)" stroke-width="2"/>
+            <path d="M24 40l12 12 20-24" stroke="url(#cg1)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+            <defs><linearGradient id="cg1" x1="0" y1="0" x2="80" y2="80" gradientUnits="userSpaceOnUse"><stop stop-color="#C8F000"/><stop offset="1" stop-color="#7FBF00"/></linearGradient></defs>
+          </svg>
+        </div>
+        <h2>Order Confirmed! 🎉</h2>
+        <p>Your order has been placed successfully. Check your email for confirmation.</p>
+        <div class="order-details-box" id="orderDetailsBox"></div>
+        <button class="btn-primary" onclick="closeCheckout(); window.scrollTo({top:0,behavior:'smooth'})">Continue Shopping</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ========== ADMIN PANEL ========== -->
+<div id="adminOverlay" class="modal-overlay"></div>
+<div id="adminPanel" class="admin-panel">
+  <div class="admin-header">
+    <div class="admin-logo">⚙️ Calotté Admin Panel</div>
+    <button class="modal-close" onclick="closeAdmin()">✕</button>
+  </div>
+
+  <!-- Admin Login -->
+  <div id="adminLogin" class="admin-section">
+    <div class="admin-login-form">
+      <h3>Admin Access</h3>
+      <p>Enter your admin password to manage products.</p>
+      <input type="password" id="adminPwd" placeholder="Admin password" />
+      <button class="btn-primary btn-full" onclick="adminLogin()">Login</button>
+    </div>
+  </div>
+
+  <!-- Admin Dashboard -->
+  <div id="adminDash" class="admin-section" style="display:none">
+    <div class="admin-tabs">
+      <button class="admin-tab active" onclick="switchAdminTab('products', this)">📦 Products</button>
+      <button class="admin-tab" onclick="switchAdminTab('orders', this)">📋 Orders</button>
+      <button class="admin-tab" onclick="switchAdminTab('config', this)">⚙️ Config</button>
+    </div>
+
+    <!-- Products Tab -->
+    <div id="adminProducts" class="admin-tab-content active">
+      <div class="admin-section-header">
+        <h4>Product Management</h4>
+        <button class="btn-primary btn-sm" onclick="openAddProduct()">+ Add Product</button>
+      </div>
+      <div class="admin-products-list" id="adminProductsList"></div>
+    </div>
+
+    <!-- Add/Edit Product Form -->
+    <div id="adminProductForm" class="admin-section" style="display:none">
+      <h4 id="productFormTitle">Add New Product</h4>
+      <div class="form-grid">
+        <div class="form-group form-full">
+          <label>Product Name *</label>
+          <input type="text" id="ap-name" placeholder="e.g. Olympic Barbell 20kg" />
+        </div>
+        <div class="form-group">
+          <label>Category *</label>
+          <select id="ap-category">
+            <option value="strength">Strength</option>
+            <option value="cardio">Cardio</option>
+            <option value="accessories">Accessories</option>
+            <option value="supplements">Supplements</option>
+            <option value="recovery">Recovery</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Icon/Emoji *</label>
+          <input type="text" id="ap-icon" placeholder="🏋️" maxlength="4" />
+        </div>
+        <div class="form-group">
+          <label>Price (₹) *</label>
+          <input type="number" id="ap-price" placeholder="2999" />
+        </div>
+        <div class="form-group">
+          <label>Original Price (₹)</label>
+          <input type="number" id="ap-origprice" placeholder="4999" />
+        </div>
+        <div class="form-group">
+          <label>Badge</label>
+          <select id="ap-badge">
+            <option value="">None</option>
+            <option value="bestseller">Bestseller</option>
+            <option value="hot">Hot</option>
+            <option value="new">New</option>
+            <option value="sale">Sale</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Rating (0-5)</label>
+          <input type="number" id="ap-rating" placeholder="4.8" min="0" max="5" step="0.1" />
+        </div>
+        <div class="form-group">
+          <label>Review Count</label>
+          <input type="number" id="ap-reviews" placeholder="324" />
+        </div>
+        <div class="form-group form-full">
+          <label>Description *</label>
+          <textarea id="ap-desc" rows="3" placeholder="Product description..."></textarea>
+        </div>
+        <div class="form-group form-full">
+          <label>Specs (format: Label:Value, one per line)</label>
+          <textarea id="ap-specs" rows="4" placeholder="Weight:20 kg&#10;Length:2.2 m&#10;Shaft:28mm"></textarea>
+        </div>
+        <div class="form-group">
+          <label>In Carousel (Supplements)</label>
+          <select id="ap-carousel">
+            <option value="false">No</option>
+            <option value="true">Yes</option>
+          </select>
+        </div>
+      </div>
+      <div class="admin-form-actions">
+        <button class="btn-outline" onclick="cancelProductForm()">Cancel</button>
+        <button class="btn-primary" onclick="saveProduct()">Save Product</button>
+      </div>
+    </div>
+
+    <!-- Orders Tab -->
+    <div id="adminOrders" class="admin-tab-content">
+      <div class="admin-section-header">
+        <h4>Order History</h4>
+        <button class="btn-outline btn-sm" onclick="clearOrders()">Clear All</button>
+      </div>
+      <div id="adminOrdersList" class="admin-orders-list"></div>
+    </div>
+
+    <!-- Config Tab -->
+    <div id="adminConfig" class="admin-tab-content">
+      <h4>Store Configuration</h4>
+      <div class="config-grid">
+        <div class="config-item">
+          <label>Discord Logging Webhook URL</label>
+          <input type="text" id="cfg-logging-webhook" placeholder="https://discord.com/api/webhooks/..." />
+        </div>
+        <div class="config-item">
+          <label>Discord Orders Webhook URL</label>
+          <input type="text" id="cfg-order-webhook" placeholder="https://discord.com/api/webhooks/..." />
+        </div>
+        <div class="config-item">
+          <label>Cashfree App ID</label>
+          <input type="text" id="cfg-cf-appid" placeholder="Your Cashfree App ID" />
+        </div>
+        <div class="config-item">
+          <label>Gemini API Key</label>
+          <input type="text" id="cfg-gemini" placeholder="Your Gemini API Key" />
+        </div>
+        <div class="config-item">
+          <label>BTC Wallet Address</label>
+          <input type="text" id="cfg-btc" placeholder="bc1q..." />
+        </div>
+        <div class="config-item">
+          <label>ETH Wallet Address</label>
+          <input type="text" id="cfg-eth" placeholder="0x..." />
+        </div>
+        <div class="config-item">
+          <label>USDT (TRC20) Address</label>
+          <input type="text" id="cfg-usdt" placeholder="T..." />
+        </div>
+      </div>
+      <button class="btn-primary" onclick="saveConfig()">Save Configuration</button>
+    </div>
+  </div>
+</div>
+
+<!-- ========== AI SUPPORT CHAT ========== -->
+<div id="aiChatWidget" class="ai-chat-widget">
+  <button class="ai-chat-toggle" id="aiChatToggle" aria-label="Open AI Support">
+    <svg viewBox="0 0 24 24" fill="none" width="24" height="24">
+      <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 14H9V8h2v8zm4 0h-2V8h2v8z" fill="currentColor" opacity="0"/>
+      <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="1.5"/>
+      <path d="M8 10h8M8 14h5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+      <circle cx="17" cy="14" r="2" fill="url(#aig)"/>
+      <defs><linearGradient id="aig" x1="15" y1="12" x2="19" y2="16" gradientUnits="userSpaceOnUse"><stop stop-color="#C8F000"/><stop offset="1" stop-color="#7FBF00"/></linearGradient></defs>
+    </svg>
+    <span class="ai-pulse"></span>
+  </button>
+  <div class="ai-chat-box" id="aiChatBox">
+    <div class="ai-chat-header">
+      <div class="ai-avatar">
+        <svg viewBox="0 0 32 32" fill="none" width="32" height="32">
+          <circle cx="16" cy="16" r="14" fill="url(#ahg)"/>
+          <path d="M8 16 Q16 8 24 16" stroke="white" stroke-width="2" stroke-linecap="round" fill="none"/>
+          <circle cx="16" cy="16" r="3" fill="white"/>
+          <defs><linearGradient id="ahg" x1="0" y1="0" x2="32" y2="32" gradientUnits="userSpaceOnUse"><stop stop-color="#C8F000"/><stop offset="1" stop-color="#1a2a00"/></linearGradient></defs>
+        </svg>
+      </div>
+      <div>
+        <div class="ai-name">Calotté AI</div>
+        <div class="ai-status"><span class="online-dot"></span>Online • Powered by Gemini</div>
+      </div>
+      <button class="ai-close-btn" onclick="toggleAIChat()">✕</button>
+    </div>
+    <div class="ai-messages" id="aiMessages">
+      <div class="ai-msg ai-msg-bot">
+        <div class="ai-msg-content">Hey! 👋 I'm Calotté AI, your personal fitness advisor. Ask me anything about our products, supplements, workout plans, or place an order!</div>
+      </div>
+    </div>
+    <div class="ai-input-area">
+      <input type="text" id="aiInput" placeholder="Ask me anything about fitness..." />
+      <button id="aiSendBtn" onclick="sendAIMessage()">
+        <svg viewBox="0 0 24 24" fill="none" width="18" height="18"><path d="M22 2L11 13M22 2L15 22 11 13 2 9l20-7z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </button>
+    </div>
+    <div class="ai-suggestions">
+      <button onclick="sendQuickMsg('What protein powder do you recommend?')">Protein reco?</button>
+      <button onclick="sendQuickMsg('Best equipment for home gym?')">Home gym?</button>
+      <button onclick="sendQuickMsg('What are your current deals?')">Current deals</button>
+    </div>
+  </div>
+</div>
+
+<!-- ========== NAVBAR ========== -->
+<header id="navbar" class="navbar">
+  <div class="nav-container">
+    <a href="#" class="nav-logo" aria-label="Calotté Home">
+      <div class="logo-icon-sm">
+        <svg viewBox="0 0 32 32" fill="none" width="28" height="28">
+          <circle cx="16" cy="16" r="14" stroke="url(#nlg)" stroke-width="1.5"/>
+          <path d="M6 16 Q16 6 26 16" stroke="url(#nlg)" stroke-width="2.5" stroke-linecap="round" fill="none"/>
+          <circle cx="16" cy="16" r="3.5" fill="url(#nlg)"/>
+          <defs><linearGradient id="nlg" x1="0" y1="0" x2="32" y2="32" gradientUnits="userSpaceOnUse"><stop stop-color="#C8F000"/><stop offset="1" stop-color="#7FBF00"/></linearGradient></defs>
+        </svg>
+      </div>
+      <span class="logo-text">Calotté</span>
+    </a>
+
+    <nav class="nav-links" role="navigation">
+      <a href="#home" class="nav-link active">Home</a>
+      <a href="#categories" class="nav-link">Categories</a>
+      <a href="#products" class="nav-link">Products</a>
+      <a href="#supplements" class="nav-link">Supplements</a>
+      <a href="#testimonials" class="nav-link">Reviews</a>
+      <a href="#contact" class="nav-link">Contact</a>
+    </nav>
+
+    <div class="nav-actions">
+      <button class="nav-icon-btn" id="searchToggle" aria-label="Search">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+      </button>
+      <button class="nav-icon-btn wishlist-btn" id="wishlistBtn" aria-label="Wishlist">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+        <span id="wishlistCount" class="badge" style="display:none">0</span>
+      </button>
+      <button class="nav-icon-btn cart-btn" id="cartBtn" aria-label="Cart">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
+        <span id="cartCount" class="badge" style="display:none">0</span>
+      </button>
+      <button class="nav-icon-btn admin-btn" id="adminBtn" aria-label="Admin" title="Admin Panel">⚙️</button>
+      <button class="hamburger" id="hamburger" aria-label="Toggle menu" aria-expanded="false">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </div>
+  <div id="searchBar" class="search-bar">
+    <div class="search-inner">
+      <input type="text" id="searchInput" placeholder="Search products..." autocomplete="off" />
+      <button id="searchClear" aria-label="Clear search">✕</button>
+    </div>
+    <div id="searchResults" class="search-results"></div>
+  </div>
+</header>
+
+<div id="mobileMenu" class="mobile-menu">
+  <a href="#home" class="mobile-link">Home</a>
+  <a href="#categories" class="mobile-link">Categories</a>
+  <a href="#products" class="mobile-link">Products</a>
+  <a href="#supplements" class="mobile-link">Supplements</a>
+  <a href="#testimonials" class="mobile-link">Reviews</a>
+  <a href="#contact" class="mobile-link">Contact</a>
+</div>
+
+<!-- ========== HERO ========== -->
+<section id="home" class="hero">
+  <canvas id="particleCanvas" class="particle-canvas"></canvas>
+  <div class="hero-grid"></div>
+  <div class="orb orb1"></div>
+  <div class="orb orb2"></div>
+  <div class="orb orb3"></div>
+  <div class="hero-content">
+    <div class="hero-text" id="heroText">
+      <div class="hero-pre-title">
+        <span class="pulse-dot"></span>
+        <span>NEW COLLECTION 2026</span>
+      </div>
+      <h1 class="hero-title">
+        ELEVATE YOUR
+        <span class="text-gradient" id="heroSpan">LEGEND</span>
+      </h1>
+      <p class="hero-subtitle">
+        Premium gym equipment & elite supplements. <br/>
+        Built for champions who refuse to settle.
+      </p>
+      <div class="hero-cta-group">
+        <a href="#products" class="btn-primary btn-hero">
+          Shop Equipment
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        </a>
+        <a href="#supplements" class="btn-glass btn-hero">View Supplements</a>
+      </div>
+      <div class="hero-stats">
+        <div class="stat-item"><span class="stat-num" data-target="10000">0</span><span>+</span><span class="stat-label">Happy Athletes</span></div>
+        <div class="stat-divider"></div>
+        <div class="stat-item"><span class="stat-num" data-target="500">0</span><span>+</span><span class="stat-label">Products</span></div>
+        <div class="stat-divider"></div>
+        <div class="stat-item"><span class="stat-num" data-target="50">0</span><span>+</span><span class="stat-label">Top Brands</span></div>
+        <div class="stat-divider"></div>
+        <div class="stat-item"><span class="stat-num" data-target="98">0</span><span>%</span><span class="stat-label">Satisfaction</span></div>
+      </div>
+    </div>
+    <div class="hero-visual" id="heroVisual">
+      <div class="hero-logo-display">
+        <svg viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg" class="hero-logo-svg">
+          <circle cx="100" cy="100" r="90" stroke="url(#hlg1)" stroke-width="1" opacity="0.3"/>
+          <circle cx="100" cy="100" r="75" stroke="url(#hlg1)" stroke-width="1.5" opacity="0.5"/>
+          <circle cx="100" cy="100" r="60" stroke="url(#hlg1)" stroke-width="2"/>
+          <path d="M40 100 Q100 30 160 100" stroke="url(#hlg2)" stroke-width="4" stroke-linecap="round" fill="none"/>
+          <path d="M40 100 Q100 170 160 100" stroke="url(#hlg2)" stroke-width="2" stroke-linecap="round" fill="none" opacity="0.3"/>
+          <circle cx="100" cy="100" r="14" fill="url(#hlg1)"/>
+          <circle cx="100" cy="100" r="8" fill="#0a0a0a"/>
+          <circle cx="40" cy="100" r="6" fill="url(#hlg1)"/>
+          <circle cx="160" cy="100" r="6" fill="url(#hlg1)"/>
+          <text x="100" y="155" text-anchor="middle" font-family="Cormorant Garamond" font-size="22" fill="url(#hlg2)" font-weight="600">Calotté</text>
+          <text x="100" y="172" text-anchor="middle" font-family="Outfit" font-size="8" fill="#C8F000" letter-spacing="4" opacity="0.7">PREMIUM FITNESS</text>
+          <defs>
+            <linearGradient id="hlg1" x1="0" y1="0" x2="200" y2="200" gradientUnits="userSpaceOnUse">
+              <stop stop-color="#C8F000"/>
+              <stop offset="1" stop-color="#7FBF00"/>
+            </linearGradient>
+            <linearGradient id="hlg2" x1="40" y1="100" x2="160" y2="100" gradientUnits="userSpaceOnUse">
+              <stop stop-color="#C8F000"/>
+              <stop offset="0.5" stop-color="#FFFFFF"/>
+              <stop offset="1" stop-color="#C8F000"/>
+            </linearGradient>
+          </defs>
+        </svg>
+        <div class="logo-ring lg-ring1"></div>
+        <div class="logo-ring lg-ring2"></div>
+      </div>
+      <div class="hero-floating-cards">
+        <div class="float-card float-card1"><span class="float-icon">⚡</span><div><strong>Fast Delivery</strong><small>2-3 Business Days</small></div></div>
+        <div class="float-card float-card2"><span class="float-icon">🔒</span><div><strong>Secure Payment</strong><small>Cashfree + Crypto</small></div></div>
+        <div class="float-card float-card3"><span class="float-icon">↩</span><div><strong>Easy Returns</strong><small>30-Day Policy</small></div></div>
+      </div>
+    </div>
+  </div>
+  <div class="scroll-indicator"><span>SCROLL</span><div class="scroll-line"><div class="scroll-dot"></div></div></div>
+</section>
+
+<!-- ========== MARQUEE ========== -->
+<div class="marquee-section">
+  <div class="marquee-track">
+    <div class="marquee-item"><span class="marquee-dot"></span> FREE SHIPPING ABOVE ₹2999</div>
+    <div class="marquee-item"><span class="marquee-dot"></span> EMI AVAILABLE ON ALL ORDERS</div>
+    <div class="marquee-item"><span class="marquee-dot"></span> AUTHENTIC BRAND GUARANTEE</div>
+    <div class="marquee-item"><span class="marquee-dot"></span> 30-DAY HASSLE-FREE RETURNS</div>
+    <div class="marquee-item"><span class="marquee-dot"></span> CRYPTO PAYMENTS ACCEPTED</div>
+    <div class="marquee-item"><span class="marquee-dot"></span> AI SUPPORT 24/7</div>
+    <div class="marquee-item"><span class="marquee-dot"></span> FREE SHIPPING ABOVE ₹2999</div>
+    <div class="marquee-item"><span class="marquee-dot"></span> EMI AVAILABLE ON ALL ORDERS</div>
+    <div class="marquee-item"><span class="marquee-dot"></span> AUTHENTIC BRAND GUARANTEE</div>
+    <div class="marquee-item"><span class="marquee-dot"></span> 30-DAY HASSLE-FREE RETURNS</div>
+  </div>
+</div>
+
+<!-- ========== CATEGORIES ========== -->
+<section id="categories" class="section categories-section">
+  <div class="container">
+    <div class="section-header reveal">
+      <span class="section-tag">EXPLORE</span>
+      <h2 class="section-title">Shop by <span class="text-gradient">Category</span></h2>
+      <p class="section-subtitle">Find everything you need to build your perfect workout setup</p>
+    </div>
+    <div class="categories-grid reveal">
+      <div class="category-card cat-featured" data-category="strength" onclick="filterProducts('strength')"><div class="cat-icon-wrap"><div class="cat-icon">🏋️</div></div><div class="cat-info"><h3>Strength Training</h3><p>Barbells, Dumbbells, Plates & Racks</p><span class="cat-count" id="cat-count-strength">0 Products</span></div><div class="cat-arrow">→</div><div class="cat-glow"></div></div>
+      <div class="category-card" data-category="cardio" onclick="filterProducts('cardio')"><div class="cat-icon-wrap"><div class="cat-icon">🏃</div></div><div class="cat-info"><h3>Cardio</h3><p>Treadmills, Bikes, Rowers</p><span class="cat-count" id="cat-count-cardio">0 Products</span></div><div class="cat-arrow">→</div></div>
+      <div class="category-card" data-category="accessories" onclick="filterProducts('accessories')"><div class="cat-icon-wrap"><div class="cat-icon">🧤</div></div><div class="cat-info"><h3>Accessories</h3><p>Gloves, Belts, Straps & More</p><span class="cat-count" id="cat-count-accessories">0 Products</span></div><div class="cat-arrow">→</div></div>
+      <div class="category-card cat-supplement" data-category="supplements" onclick="filterProducts('supplements')"><div class="cat-icon-wrap"><div class="cat-icon">💊</div></div><div class="cat-info"><h3>Supplements</h3><p>Protein, Creatine, Pre-Workout</p><span class="cat-count" id="cat-count-supplements">0 Products</span></div><div class="cat-arrow">→</div><div class="cat-glow"></div></div>
+      <div class="category-card" data-category="recovery" onclick="filterProducts('recovery')"><div class="cat-icon-wrap"><div class="cat-icon">🧘</div></div><div class="cat-info"><h3>Recovery</h3><p>Foam Rollers, Massage Guns</p><span class="cat-count" id="cat-count-recovery">0 Products</span></div><div class="cat-arrow">→</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ========== PROMO BANNER ========== -->
+<section class="promo-banner section">
+  <div class="container">
+    <div class="promo-grid reveal">
+      <div class="promo-card promo-card1"><div class="promo-content"><span class="promo-tag">Limited Offer</span><h3>Up to 40% OFF</h3><p>On Premium Barbells & Weight Sets</p><a href="#products" class="btn-primary btn-sm">Shop Now →</a></div><div class="promo-icon">🏋️</div></div>
+      <div class="promo-card promo-card2"><div class="promo-content"><span class="promo-tag">Hot Deal</span><h3>Buy 2 Get 1 Free</h3><p>On All Supplement Orders Above ₹3000</p><a href="#supplements" class="btn-primary btn-sm">Claim Now →</a></div><div class="promo-icon">💊</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ========== PRODUCTS ========== -->
+<section id="products" class="section products-section">
+  <div class="container">
+    <div class="section-header reveal">
+      <span class="section-tag">CATALOG</span>
+      <h2 class="section-title">Featured <span class="text-gradient">Products</span></h2>
+      <p class="section-subtitle">Engineered for performance, built to last</p>
+    </div>
+    <div class="filter-bar reveal">
+      <div class="filter-tabs" id="filterTabs" role="tablist">
+        <button class="filter-tab active" data-filter="all" role="tab" aria-selected="true">All</button>
+        <button class="filter-tab" data-filter="strength" role="tab">Strength</button>
+        <button class="filter-tab" data-filter="cardio" role="tab">Cardio</button>
+        <button class="filter-tab" data-filter="accessories" role="tab">Accessories</button>
+        <button class="filter-tab" data-filter="supplements" role="tab">Supplements</button>
+        <button class="filter-tab" data-filter="recovery" role="tab">Recovery</button>
+      </div>
+      <div class="sort-select-wrap">
+        <select id="sortSelect" class="sort-select" aria-label="Sort products">
+          <option value="default">Sort: Featured</option>
+          <option value="price-asc">Price: Low to High</option>
+          <option value="price-desc">Price: High to Low</option>
+          <option value="rating">Top Rated</option>
+          <option value="newest">Newest</option>
+        </select>
+      </div>
+    </div>
+    <div class="products-grid" id="productsGrid"></div>
+    <div class="load-more-wrap reveal">
+      <button class="btn-outline" id="loadMoreBtn">Load More Products</button>
+    </div>
+  </div>
+</section>
+
+<!-- ========== SUPPLEMENTS CAROUSEL ========== -->
+<section id="supplements" class="section bestsellers-section">
+  <div class="container">
+    <div class="section-header reveal">
+      <span class="section-tag">TOP PICKS</span>
+      <h2 class="section-title">Best Selling <span class="text-gradient">Supplements</span></h2>
+      <p class="section-subtitle">Fuel your body with scientifically-backed nutrition</p>
+    </div>
+    <div class="carousel-wrapper reveal">
+      <button class="carousel-btn carousel-prev" id="carouselPrev" aria-label="Previous">‹</button>
+      <div class="carousel-track-wrap">
+        <div class="carousel-track" id="carouselTrack"></div>
+      </div>
+      <button class="carousel-btn carousel-next" id="carouselNext" aria-label="Next">›</button>
+    </div>
+    <div class="carousel-dots" id="carouselDots" role="tablist"></div>
+  </div>
+</section>
+
+<!-- ========== WHY CALOTTÉ ========== -->
+<section class="section why-section">
+  <div class="container">
+    <div class="section-header reveal">
+      <span class="section-tag">WHY US</span>
+      <h2 class="section-title">The <span class="text-gradient">Calotté</span> Difference</h2>
+    </div>
+    <div class="why-grid reveal">
+      <div class="why-card"><div class="why-icon">⚡</div><h4>Lightning Fast Delivery</h4><p>Get your gear delivered in 2-3 business days with real-time tracking across India.</p></div>
+      <div class="why-card"><div class="why-icon">🔬</div><h4>Lab Tested Supplements</h4><p>Every supplement is 3rd-party tested for purity, potency, and safety. No shortcuts.</p></div>
+      <div class="why-card"><div class="why-icon">💎</div><h4>Premium Build Quality</h4><p>Commercial-grade equipment designed for years of heavy daily use. Built like a tank.</p></div>
+      <div class="why-card"><div class="why-icon">🤖</div><h4>AI Fitness Advisor</h4><p>Our Gemini-powered AI advisor helps you pick the perfect gear 24/7, anytime.</p></div>
+      <div class="why-card"><div class="why-icon">₿</div><h4>Crypto & UPI Payments</h4><p>Pay with Bitcoin, ETH, USDT, UPI, cards, or net banking — your choice, 100% secure.</p></div>
+      <div class="why-card"><div class="why-icon">↩</div><h4>Easy 30-Day Returns</h4><p>Not happy? Return anything within 30 days. No questions, no hassle, full refund.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- ========== TESTIMONIALS ========== -->
+<section id="testimonials" class="section testimonials-section">
+  <div class="container">
+    <div class="section-header reveal">
+      <span class="section-tag">REVIEWS</span>
+      <h2 class="section-title">What Athletes <span class="text-gradient">Are Saying</span></h2>
+      <p class="section-subtitle">Real reviews from real athletes across India</p>
+    </div>
+    <div class="testimonials-grid reveal" id="testimonialsGrid"></div>
+  </div>
+</section>
+
+<!-- ========== BRANDS ========== -->
+<section class="brand-partners section">
+  <div class="container">
+    <div class="section-header reveal"><span class="section-tag">PARTNERSHIPS</span><h2 class="section-title">Trusted <span class="text-gradient">Brands</span></h2></div>
+    <div class="brands-marquee reveal">
+      <div class="brands-track">
+        <span class="brand-pill">ON Gold Standard</span><span class="brand-pill">MuscleBlaze</span><span class="brand-pill">Rogue Fitness</span><span class="brand-pill">PowerBlock</span><span class="brand-pill">Bowflex</span><span class="brand-pill">MuscleTech</span><span class="brand-pill">Dymatize</span><span class="brand-pill">BSN Syntha</span><span class="brand-pill">NutriTech</span><span class="brand-pill">Life Fitness</span>
+        <span class="brand-pill">ON Gold Standard</span><span class="brand-pill">MuscleBlaze</span><span class="brand-pill">Rogue Fitness</span><span class="brand-pill">PowerBlock</span><span class="brand-pill">Bowflex</span><span class="brand-pill">MuscleTech</span><span class="brand-pill">Dymatize</span><span class="brand-pill">BSN Syntha</span><span class="brand-pill">NutriTech</span><span class="brand-pill">Life Fitness</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ========== NEWSLETTER ========== -->
+<section class="newsletter-section section">
+  <div class="container">
+    <div class="newsletter-card reveal">
+      <div class="newsletter-deco deco1"></div>
+      <div class="newsletter-deco deco2"></div>
+      <div class="newsletter-content">
+        <span class="section-tag">STAY UPDATED</span>
+        <h2>Get <span class="text-gradient">Exclusive Deals</span> & Fitness Tips</h2>
+        <p>Join 50,000+ athletes getting weekly deals, training tips, and early access to new arrivals.</p>
+        <div class="newsletter-form" id="newsletterForm">
+          <div class="newsletter-input-wrap">
+            <input type="email" placeholder="Enter your email address" id="newsletterEmail" />
+            <button class="btn-primary" onclick="handleNewsletter()">Subscribe Free</button>
+          </div>
+          <p class="newsletter-note">🔒 No spam, ever. Unsubscribe anytime.</p>
+        </div>
+        <div id="newsletterSuccess" class="newsletter-success" style="display:none"><span>🎉</span> Welcome to the Calotté family!</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ========== FOOTER ========== -->
+<footer id="contact" class="footer">
+  <div class="footer-top">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-col footer-brand-col">
+          <a href="#" class="footer-logo">
+            <svg viewBox="0 0 32 32" fill="none" width="28" height="28" style="margin-right:8px">
+              <circle cx="16" cy="16" r="14" stroke="url(#flg)" stroke-width="1.5"/>
+              <path d="M6 16 Q16 6 26 16" stroke="url(#flg)" stroke-width="2.5" stroke-linecap="round" fill="none"/>
+              <circle cx="16" cy="16" r="3.5" fill="url(#flg)"/>
+              <defs><linearGradient id="flg" x1="0" y1="0" x2="32" y2="32" gradientUnits="userSpaceOnUse"><stop stop-color="#C8F000"/><stop offset="1" stop-color="#7FBF00"/></linearGradient></defs>
+            </svg>
+            Calotté
+          </a>
+          <p class="footer-tagline">Your #1 destination for premium gym equipment and supplements in India. Built for those who train hard.</p>
+          <div class="footer-socials">
+            <a href="#" class="social-link" aria-label="Instagram">📸</a>
+            <a href="#" class="social-link" aria-label="YouTube">▶</a>
+            <a href="#" class="social-link" aria-label="Discord">💬</a>
+            <a href="#" class="social-link" aria-label="Twitter">🐦</a>
+          </div>
+          <div class="footer-badges">
+            <div class="trust-badge">✅ Secure Payments</div>
+            <div class="trust-badge">₿ Crypto Accepted</div>
+          </div>
+        </div>
+        <div class="footer-col"><h5>Quick Links</h5><ul><li><a href="#">Home</a></li><li><a href="#">About Us</a></li><li><a href="#products">Shop Equipment</a></li><li><a href="#supplements">Supplements</a></li><li><a href="#">Blog</a></li></ul></div>
+        <div class="footer-col"><h5>Customer Care</h5><ul><li><a href="#">Track My Order</a></li><li><a href="#">Returns & Refunds</a></li><li><a href="#">Shipping Info</a></li><li><a href="#">FAQs</a></li><li><a href="#">Contact Us</a></li></ul></div>
+        <div class="footer-col"><h5>Get In Touch</h5><div class="footer-contact-list">
+          <div class="footer-contact-item"><span>📍</span><span>NH71A, Geeta University, Naultha, Panipat, Haryana - 132145</span></div>
+          <div class="footer-contact-item"><span>📞</span><a href="tel:+919053771272">+91 90537 71272</a></div>
+          <div class="footer-contact-item"><span>✉️</span><a href="mailto:support@calotte.in">support@calotte.in</a></div>
+          <div class="footer-contact-item"><span>🕐</span><span>Mon–Sat, 9AM–7PM IST</span></div>
+        </div></div>
+      </div>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <div class="container">
+      <div class="footer-bottom-inner">
+        <p>© 2026 Calotté. All rights reserved. Made with ❤️ for fitness enthusiasts.</p>
+        <div class="footer-legal"><a href="#">Privacy Policy</a><a href="#">Terms of Use</a><a href="#">Cookie Policy</a></div>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<button id="scrollTop" class="scroll-top" aria-label="Scroll to top">
+  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 15l-6-6-6 6"/></svg>
+</button>
+<div id="toast" class="toast" role="alert" aria-live="polite"></div>
+
+<script src="script.js"></script>
+</body>
+</html>

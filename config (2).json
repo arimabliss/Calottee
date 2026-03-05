@@ -1,0 +1,41 @@
+{
+  "store": {
+    "name": "Calotté",
+    "tagline": "Premium Gym Equipment & Supplements",
+    "email": "support@calotte.in",
+    "phone": "+91 90537 71272",
+    "address": "NH71A, Geeta University, Naultha, Panipat, Haryana - 132145",
+    "currency": "INR",
+    "currencySymbol": "₹"
+  },
+  "discord": {
+    "loggingWebhookUrl": "YOUR_DISCORD_LOGGING_WEBHOOK_URL_HERE",
+    "orderWebhookUrl": "YOUR_DISCORD_ORDER_WEBHOOK_URL_HERE",
+    "enabled": true
+  },
+  "payments": {
+    "cashfree": {
+      "enabled": true,
+      "appId": "YOUR_CASHFREE_APP_ID",
+      "secretKey": "YOUR_CASHFREE_SECRET_KEY",
+      "mode": "sandbox"
+    },
+    "crypto": {
+      "enabled": true,
+      "wallets": {
+        "btc": "YOUR_BTC_WALLET_ADDRESS",
+        "eth": "YOUR_ETH_WALLET_ADDRESS",
+        "usdt": "YOUR_USDT_TRC20_ADDRESS"
+      },
+      "confirmations": 1
+    }
+  },
+  "ai": {
+    "geminiApiKey": "YOUR_GEMINI_API_KEY_HERE",
+    "model": "gemini-1.5-flash",
+    "enabled": true
+  },
+  "admin": {
+    "password": "calotte_admin_2026"
+  }
+}
